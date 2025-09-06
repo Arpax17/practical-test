@@ -1,23 +1,22 @@
 <?php
 
-use App\Livewire\Settings\Appearance;
-use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
+use App\Livewire\Settings\Password;
+use App\Livewire\Settings\Appearance;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\CookieConsentController;
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
-Route::get('/about-us', function () {
-    return view('about-us');
-})->name('about');
-Route::get('/privacy-policy-page', function () {
-    return view('privacy-and-policy');
-})->name('privacy');
-Route::get('/terms-and-conditions-page', function () {
-    return view('term-and-condition');
-})->name('terms');
 
+Route::controller(PageController::class)->group(function () {
+    Route::get('/', 'home')->name('home');
+    Route::get('/about-us', 'about')->name('about');
+    Route::get('/privacy-policy-page', 'privacy')->name('privacy');
+    Route::get('/terms-and-conditions-page', 'terms')->name('terms');
+});
+
+Route::post('/cookie-consent', [CookieConsentController::class, 'store'])
+    ->name('cookie-consent.store');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

@@ -38,7 +38,7 @@ return [
 
     'cookie' => [
         'name' => Str::slug(env('APP_NAME', 'laravel'), '_').'_cookie_consent',
-        'duration' => (60 * 24 * 336),
+        'duration' => (int) env('SESSION_LIFETIME', 120),
         'domain' => null,
     ],
 

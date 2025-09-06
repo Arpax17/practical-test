@@ -14,8 +14,10 @@ class CookiesServiceProvider extends ServiceProvider
     {
         // Register Laravel's base cookies under the "required" cookies section:
         Cookies::essentials()
-            ->session()
-            ->csrf();
+                ->session()
+                ->csrf();
+        //         ->duration(60 * 24 * 336);
+        // Cookies::category(key: 'my-custom-category');
 
         // Register all Analytics cookies at once using one single shorthand method:
         // Cookies::analytics()

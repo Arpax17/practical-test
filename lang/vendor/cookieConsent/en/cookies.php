@@ -6,6 +6,7 @@ return [
 
     'essentials' => 'Only essentials',
     'all' => 'Accept all',
+    'decline' => 'Decline',
     'customize' => 'Customize',
     'manage' => 'Manage cookies',
     'details' => [

@@ -2,10 +2,10 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.head')
-        @cookieconsentscripts
-        @fluxAppearance
+
+
     </head>
-    <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
+    <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] dark:text-[#FFFFFF] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
         <header class="w-full  text-sm mb-6 not-has-[nav]:hidden ">
                 <nav class="grid grid-cols-2 lg:grid-cols-3 gap-4">
                     <div class="flex">
@@ -69,10 +69,16 @@
 
         @cookieconsentview
         <script>
-            document.addEventListener('keydown', function (event) {
-                if (event.ctrlKey && event.key === 'Enter') {
-                    window.location.href = "{{ route('login') }}";
-                }
+            $(document).ready(function () {
+                // Ctrl + Enter shortcut
+                document.addEventListener('keydown', function (event) {
+                    if (event.ctrlKey && event.key === 'Enter') {
+                        event.preventDefault();
+                        window.location.href = "{{ route('login') }}";
+                    }
+                });
+
+
             });
         </script>
         @fluxScripts

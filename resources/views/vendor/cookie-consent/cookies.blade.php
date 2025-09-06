@@ -1,3 +1,7 @@
+<div id="screen-lock"
+     class="fixed inset-0 z-[9998] bg-gray-900/60 backdrop-blur-sm
+            flex items-center justify-center">
+</div>
 <aside id="cookies-policy" class="cookies cookies--no-js" data-text="{{ json_encode(__('cookieConsent::cookies.details')) }}">
     <div class="cookies__alert">
         <div class="cookies__container">
@@ -15,6 +19,10 @@
                 <div class="cookies__actions">
                     @cookieconsentbutton(action: 'accept.essentials', label: __('cookieConsent::cookies.essentials'), attributes: ['class' => 'cookiesBtn cookiesBtn--essentials'])
                     @cookieconsentbutton(action: 'accept.all', label: __('cookieConsent::cookies.all'), attributes: ['class' => 'cookiesBtn cookiesBtn--accept'])
+                    {{-- @cookieconsentbutton(action: 'decline', label: __('cookieConsent::cookies.decline'), attributes: ['id' => 'declineBtn', 'class' => 'cookiesBtn cookiesBtn--decline']) --}}
+                    <button id="declineBtn" type="submit" class="cookiesBtn__link">
+                        <span class="cookiesBtn__label">{{ __('cookieConsent::cookies.decline') }}</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -74,6 +82,78 @@
 
 <script data-cookie-consent>
     {!! file_get_contents(LCC_ROOT . '/dist/script.js') !!}
+    // helper to unlock screen
+    $(document).ready(function () {
+        function unlockScreen(action) {
+            console.log('in unlockScreen');
+            const lock = document.getElementById('screen-lock');
+            if (lock) {
+                lock.classList.add('hidden'); // Tailwind way
+                document.body.classList.remove('overflow-hidden');
+                $.ajax({
+                    type: 'POST',
+                    url: '/cookie-consent',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        action: action
+                    },
+                    dataType: 'JSON',
+                    success: function(data) {
+                    },
+                });
+            }
+        }
+
+        // Intercept cookie consent acceptance
+        const originalAcceptAll = LaravelCookieConsent.acceptAll;
+        LaravelCookieConsent.acceptAll = function () {
+            console.log('in acceptAll');
+            console.log(originalAcceptAll);
+            originalAcceptAll.apply(this, arguments);
+            unlockScreen('acceptAll');
+        };
+
+        const originalAcceptEssentials = LaravelCookieConsent.acceptEssentials;
+        LaravelCookieConsent.acceptEssentials = function () {
+            console.log('in acceptEssentials');
+            originalAcceptEssentials.apply(this, arguments);
+            unlockScreen('acceptEssentials');
+        };
+
+        const configure = LaravelCookieConsent.configure;
+        LaravelCookieConsent.configure = function () {
+            console.log('in configure');
+            configure.apply(this, arguments);
+            unlockScreen('configure');
+        };
+
+        $('#declineBtn').on('click', function (e) {
+            console.log('test');
+            var consent = document.querySelector("#cookies-policy")
+            consent.removeAttribute("data-text"),
+            consent.classList.remove("cookies--no-js"),
+            consent.classList.add("cookies--closing"),
+            // e.preventDefault();
+            unlockScreen('decline');
+        });
+        // function declineConsent() {
+        //     const now = new Date();
+        //     const expire = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 1 day from now
+
+        //     document.cookie = `cookie_consent_declined=1; expires=${expire.toUTCString()}; path=/;`;
+
+        //     const lock = document.getElementById('screen-lock');
+        //     if (lock) {
+        //         lock.classList.add('hidden');
+        //         document.body.classList.remove('overflow-hidden');
+        //     }
+
+        //     console.log('Consent declined: cookie set for 1 day.');
+        //     }
+    });
+
 </script>
 <style data-cookie-consent>
     {!! file_get_contents(LCC_ROOT . '/dist/style.css') !!}
