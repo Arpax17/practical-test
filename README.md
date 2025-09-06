@@ -74,5 +74,5 @@ You can access the secured backend portal:
 
 ### Credentials
 
-- **Username:** `admin`  
+- **Email:** `admin@example.com`  
 - **Password:** `password`
