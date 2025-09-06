@@ -63,14 +63,25 @@ This is a Laravel-based project. Follow the instructions below to set up and dep
    npm run build
    ```
 
----
+10. Start the local development server
+
+    ```bash
+    php artisan serve
+    ```
+✅ Additional Notes
+
+Ensure you have PHP ≥ 8.2, Composer, Node.js, and NPM installed.
+
+Laravel artisan commands must be run from the project root.
 
 ## 🔐 Login Access
 
 You can access the secured backend portal:
 
-- Open in browser → [http://localhost/login](http://localhost/login)  
+- Open in browser → (http://127.0.0.1:8000/login) 
 - Use **Ctrl + Enter** shortcut if supported, or go directly to `/login`
+
+Landing page: http://127.0.0.1:8000/
 
 ### Credentials
 
